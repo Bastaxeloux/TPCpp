@@ -5,6 +5,7 @@ Multimedia::Multimedia() : name(""), path("") {}
 
 // Constructeur avec paramètres
 Multimedia::Multimedia(const std::string& nom, const std::string& path) : name(nom), path(path) {}
+// on met & comme ca on ne copie pas le string mais on passe juste l'adresse
 
 // Destructeur
 Multimedia::~Multimedia() {}

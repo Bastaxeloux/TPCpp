@@ -26,8 +26,14 @@ public:
 
     // Lecture de la vidéo
     void play() const override {
-        std::string command = "mpv " + path + " &";
-        system(command.c_str());
+        std::string path = getPath();
+        #ifdef _WIN32
+            system(("start " + path).c_str());  // Windows
+        #elif __APPLE__
+            system(("open " + path + " &").c_str());  // macOS
+        #else
+            system(("xdg-open " + path + " &").c_str());  // Linux (Ubuntu, Debian, etc.)
+        #endif
     }
 };
 

@@ -28,10 +28,17 @@ public:
     }
 
     // Lecture de la photo
-    void play() const override {
-        std::string command = "imagej " + path + " &";
-        system(command.c_str());
+    void play() const override { // on est obligés de faire ca car chaque systeme d'exploitation a sa propre commande pour ouvrir une photo
+        std::string path = getPath();
+        #ifdef _WIN32
+            system(("start " + path).c_str());  // Windows
+        #elif __APPLE__
+            system(("open " + path + " &").c_str());  // macOS
+        #else
+            system(("xdg-open " + path + " &").c_str());  // Linux (Ubuntu, Debian, etc.)
+        #endif
     }
+        
 };
 
 #endif // PHOTO_H

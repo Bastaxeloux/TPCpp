@@ -28,3 +28,7 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 
 clean:
 	rm -rf $(OBJDIR) $(PROG)
+
+run: all
+	./Lecteur-multimedia
+

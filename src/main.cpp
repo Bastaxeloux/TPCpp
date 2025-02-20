@@ -5,31 +5,35 @@
 #include "Film.h"
 
 int main() {
+    // Définition des chapitres
+    int chapters1[] = { 0, 120, 240, 360 };
 
-    int chapters[] = {10,5,5,10};
+    // Création d'un film
+    Film film1("Inception", "media/inception.mp4", 600, chapters1, 4);
+    std::cout << "Film 1 :" << std::endl;
+    film1.display(std::cout);
 
-    std::vector<Multimedia*> Tableau;
+    // **Test du constructeur de copie**
+    Film film2 = film1;
+    std::cout << "\nFilm 2 (copie de film1) :" << std::endl;
+    film2.display(std::cout);
 
-    Tableau.push_back(new Photo("Image", "/mnt/c/Users/maell/SynologyDrive/Telecom/Cours2AAAAAAAAAAA/Cours/INF224/TPC/image.jpg", 48.8, 12.2));
-    // Tableau.push_back(new Video("Vidéo", "/mnt/c/Users/maell/SynologyDrive/Telecom/Cours2AAAAAAAAAAA/Cours/INF224/TPC/video.mp4", 60));
-    Tableau.push_back(new Photo("Image2", "/mnt/c/Users/maell/SynologyDrive/Telecom/Cours2AAAAAAAAAAA/Cours/INF224/TPC/image2.jpg", 48.8, 12.2));
-    Tableau.push_back(new Film("Film", "/mnt/c/Users/maell/SynologyDrive/Telecom/Cours2AAAAAAAAAAA/Cours/INF224/TPC/video.mp4", 120, chapters, 4));
+    // **Test de l’opérateur `=`**
+    Film film3;
+    film3 = film1;
+    std::cout << "\nFilm 3 (après affectation de film1) :" << std::endl;
+    film3.display(std::cout);
 
-    // Boucle polymorphique pour afficher les informations
-    std::cout << "Affichage des objets Multimedia :" << std::endl;
-    for (const auto& media : Tableau) {
-        media->display(std::cout);
-    }
-
-    // Boucle polymorphique pour jouer les fichiers
-    std::cout << "\nLecture des fichiers multimédias..." << std::endl;
-    for (const auto& media : Tableau) {
-        media->play();
-    }
-
-    for (auto& media : Tableau) {
-        delete media;
-    }
-
+    // **Test de la modification des chapitres**
+    int chapters2[] = { 0, 60, 120, 180, 240, 300, 360 };
+    film1.setChapters(chapters2, 7);
+    std::cout << "\nFilm 1 (après modification des chapitres) :" << std::endl;
+    film1.display(std::cout);
+    std::cout << "\nFilm 2 (copie de film1) :" << std::endl;
+    film2.display(std::cout);
+    std::cout << "\nLes chapitres de Film 2 n'ont pas changé ! Nickel !" << std::endl;
+    
     return 0;
 }
+
+
