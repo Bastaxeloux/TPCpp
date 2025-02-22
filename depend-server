@@ -1,7 +1,0 @@
-server.o: src/server.cpp include/tcpserver.h include/ccsocket.h \
-  include/Database.h include/Multimedia.h include/Photo.h \
-  include/Video.h include/Film.h include/Group.h
-tcpserver.o: src/tcpserver.cpp include/tcpserver.h include/ccsocket.h
-ccsocket.o: src/ccsocket.cpp include/ccsocket.h
-Database.o: src/Database.cpp include/Database.h include/Multimedia.h \
-  include/Photo.h include/Video.h include/Film.h include/Group.h

@@ -49,23 +49,23 @@ int main() {
 
   db.saveToFile("database.txt");
 
-  std::ifstream testFile("database.txt");
-  std::cout << "📂 Contenu de database.txt :\n";
-  std::cout << testFile.rdbuf();
-  testFile.close();
+//   std::ifstream testFile("database.txt");
+//   std::cout << "Contenu de database.txt :\n";
+//   std::cout << testFile.rdbuf();
+//   testFile.close();
 
   db.saveGroupsToFile("groups.txt");
 
   std::cout << "Sauvegarde effectuée.; " << std::endl;
 
   db = Database();
-  std::cout << "Base réinitialisée.; ";
+  std::cout << "Base réinitialisée. \n ";
 
   db.loadFromFile("database.txt");
   db.loadGroupsFromFile("groups.txt"); 
 
-  std::cout << "[DEBUG] Vérification des groupes après chargement :\n";
-  db.listAllGroups(std::cout);
+//   std::cout << "[DEBUG] Vérification des groupes après chargement :\n";
+//   db.listAllGroups(std::cout);
 
   std::cout << "Vérification après rechargement :; ";
   db.displayMultimedia("Dust2", std::cout);
@@ -105,7 +105,7 @@ void setupCommands() {
     commandMap["list_media"] = [](std::stringstream& ss, std::string& response) {
         std::ostringstream oss;
         db.listAllMedia(oss);
-        std::cout << "[DEBUG] Réponse envoyée : " << oss.str() << std::endl;
+        // std::cout << "[DEBUG] Réponse envoyée : " << oss.str() << std::endl;
         response = oss.str();
     };
 

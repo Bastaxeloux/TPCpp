@@ -129,9 +129,9 @@ void Database::listAllMedia(std::ostream& stream) const {
 }
 
 void Database::listAllGroups(std::ostream& stream) const {
-    stream << "Liste des groupes disponibles : ";
+    stream << "Liste des groupes disponibles | ";
     for (const auto& pair : groupTable) {
-        stream << "Nom du groupe: " << pair.first << " ";
+        stream << "Nom du groupe: " << pair.first << " | ";
     }
 }
 
@@ -146,7 +146,7 @@ void Database::searchPartial(const std::string& substring, std::ostream& stream)
             else if (dynamic_cast<Video*>(pair.second.get())) stream << "Video";
             else if (dynamic_cast<Film*>(pair.second.get())) stream << "Film";
             else stream << "Inconnu";
-            stream << ", Chemin: " << pair.second->getPath() << "] ";
+            stream << ", Chemin: " << pair.second->getPath() << "]; ";
 
             found = true;
         }
@@ -166,7 +166,7 @@ void Database::searchByType(const std::string& type, std::ostream& stream) const
             (type == "Film" && dynamic_cast<Film*>(media.get()))) {
             
             if (found) stream << " | ";
-            stream << "Nom: " << pair.first << ", Chemin d'accès: " << media->getPath();
+            stream << "Nom: " << pair.first << ", Chemin d'accès: " << media->getPath() << "; ";
             found = true;
         }
     }

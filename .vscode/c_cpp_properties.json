@@ -3,7 +3,7 @@
         {
             "name": "WSL",
             "includePath": [
-                "${workspaceFolder}/include",
+                "${workspaceFolder}/cpp/include",
                 "/usr/local/include"
             ],
             "defines": [],
