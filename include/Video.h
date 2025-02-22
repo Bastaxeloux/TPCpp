@@ -35,6 +35,19 @@ public:
             system(("xdg-open " + path + " &").c_str());  // Linux (Ubuntu, Debian, etc.)
         #endif
     }
-};
+
+    void write(std::ostream& os) const override {
+        os << "Video ";
+        Multimedia::write(os);
+        os << duration << "\n";
+    }
+    
+    void read(std::istream& is) override {
+        Multimedia::read(is);
+        is >> duration;
+    }
+    
+    std::string getType() const override { return "Video"; }
+};   
 
 #endif // VIDEO_H

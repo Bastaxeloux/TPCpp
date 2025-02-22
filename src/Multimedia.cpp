@@ -8,7 +8,9 @@ Multimedia::Multimedia(const std::string& nom, const std::string& path) : name(n
 // on met & comme ca on ne copie pas le string mais on passe juste l'adresse
 
 // Destructeur
-Multimedia::~Multimedia() {}
+Multimedia::~Multimedia() {
+    std::cout << "Destruction de l'objet multimédia : " << name << std::endl;
+}
 
 // Getter pour le nom
 std::string Multimedia::getName() const {
@@ -33,4 +35,12 @@ void Multimedia::setPath(const std::string& path) {
 // Affichage
 void Multimedia::display(std::ostream& out) const {
     out << "Nom: " << name << ", Chemin d'accès: " << path << std::endl;
+}
+
+void Multimedia::write(std::ostream& os) const {
+    os << name << " " << path << " ";
+}
+
+void Multimedia::read(std::istream& is) {
+    is >> name >> path;
 }

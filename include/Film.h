@@ -28,6 +28,31 @@ class Film : public Video {
         const int* getChapters() const; // le fait que ca soit const est important sinon on pourrait le modifier
         int getNbChapters() const;
         void display(std::ostream& stream) const override;
+
+        void write(std::ostream& os) const override {
+            os << "Film ";
+            Multimedia::write(os);
+            os << getDuration() << " " << nbChapters << " ";
+            for (int i = 0; i < nbChapters; i++) {
+                os << chapters[i] << " ";
+            }
+            os << "\n";
+        }
+        
+        void read(std::istream& is) override {
+            Multimedia::read(is);
+            int tempDuration;
+            is >> tempDuration >> nbChapters;
+            setDuration(tempDuration);
+            delete[] chapters;
+            chapters = new int[nbChapters];
+            for (int i = 0; i < nbChapters; i++) {
+                is >> chapters[i];
+            }
+        }
+
+        std::string getType() const override { return "Film"; }
 };
+    
 
 #endif // FILM_H

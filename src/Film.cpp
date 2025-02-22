@@ -9,6 +9,7 @@ Film::Film(const std::string& name, const std::string& path, int duration, const
 
 Film::~Film() {
     delete [] chapters;
+    std::cout << "Destruction de l'objet Film : " << getName() << std::endl;
 }
 
 // Setters et getters

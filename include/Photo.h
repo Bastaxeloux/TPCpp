@@ -38,7 +38,21 @@ public:
             system(("xdg-open " + path + " &").c_str());  // Linux (Ubuntu, Debian, etc.)
         #endif
     }
+
+    void write(std::ostream& os) const override {
+        os << "Photo ";
+        Multimedia::write(os);
+        os << latitude << " " << longitude << "\n";
+    }
+    
+    void read(std::istream& is) override {
+        Multimedia::read(is);
+        is >> latitude >> longitude;
+    }
+
+    std::string getType() const override { return "Photo"; }
         
 };
+
 
 #endif // PHOTO_H

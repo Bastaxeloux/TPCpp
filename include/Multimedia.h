@@ -48,6 +48,10 @@ class Multimedia {
 
         // Lecture de l'objet (méthode virtuelle pure → rend la classe abstraite)
         virtual void play() const = 0;
+        virtual std::string getType() const = 0;
+
+        virtual void write(std::ostream& os) const;
+        virtual void read(std::istream& is);
 };
 
 # endif // MULTIMEDIA_H

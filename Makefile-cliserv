@@ -1,0 +1,140 @@
+##########################################
+#
+#  Makefile pour client/serveur TCP
+#  Eric Lecolinet - Reda Dehak - Telecom ParisTech 2015
+#  INF224 - TP C++ - http://www.telecom-paristech.fr/~elc/inf224
+# 
+##########################################
+
+SRCDIR = src
+OBJDIR = obj
+INCLUDEDIR = include
+
+#
+# Nom du programme
+#
+CLIENT=client
+SERVER=server
+CLISERV=cliserv
+
+all: liblecteur.a ${CLIENT} ${SERVER}
+
+liblecteur.a:
+	make -f Makefile
+
+#
+# Fichiers sources (NE PAS METTRE les .h ni les .o mais seulement les .cpp)
+#
+CLIENT_SOURCES=$(SRCDIR)/client.cpp $(SRCDIR)/ccsocket.cpp
+SERVER_SOURCES=$(SRCDIR)/server.cpp $(SRCDIR)/tcpserver.cpp $(SRCDIR)/ccsocket.cpp $(SRCDIR)/Database.cpp
+CLISERV_SOURCES=$(CLIENT_SOURCES) $(SERVER_SOURCES)
+#
+# Fichiers objets (ne pas modifier, sauf si l'extension n'est pas .cpp)
+#
+CLIENT_OBJETS=$(CLIENT_SOURCES:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
+SERVER_OBJETS=$(SERVER_SOURCES:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
+
+SERVER_LIB=liblecteur.a
+
+#
+# Compilateur C++ (suivant les systemes CXX ou CCC)
+#
+CXX= c++
+
+#
+# Options du compilateur C++
+#   -g pour debugger, -O optimise, -Wall affiche les erreurs, -I pour les headers
+#   -std=c++11 pour C++11
+# Example: CXXFLAGS= -std=c++11 -Wall -O -I/usr/local/qt/include
+#
+CXXFLAGS= -std=c++17 -Wall -g -I$(INCLUDEDIR) -pthread
+
+#
+# Options de l'editeur de liens
+#
+LDFLAGS= 
+LDLIBS= -lpthread 
+
+
+##########################################
+#
+# Regles de construction/destruction des .o et de l'executable
+# depend-${PROG} sera un fichier contenant les dependances
+#
+
+all: ${CLIENT} ${SERVER}
+
+${CLIENT}: ${CLIENT_OBJETS}
+	${CXX} ${CXXFLAGS} ${LDFLAGS} ${CLIENT_OBJETS} ${LDLIBS} -o $@
+
+${SERVER}: ${SERVER_OBJETS} ${SERVER_LIB}
+	${CXX} ${CXXFLAGS} ${LDFLAGS} ${SERVER_OBJETS} ${SERVER_LIB} -lpthread -o $@
+
+run-server: ${SERVER}
+	./${SERVER}
+
+run-client: ${CLIENT}
+	./${CLIENT}
+
+
+##########################################
+#
+# Compilation des fichiers .cpp en .o (dans obj/)
+#
+
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp
+	@mkdir -p $(OBJDIR)
+	${CXX} ${CXXFLAGS} -c $< -o $@
+
+
+##########################################
+#
+# Nettoyage
+#
+
+clean:
+	@rm -rf $(OBJDIR) ${CLIENT} ${SERVER} depend-${CLIENT} depend-${SERVER}
+
+clean-all: clean
+	@rm -f ${CLIENT} ${SERVER}
+  
+tar:
+	@tar czf ${CLISERV}.tar.gz ${CLISERV_SOURCES}
+
+# Gestion des dependances : creation automatique des dependances en utilisant 
+# l'option -MM de g++ (attention tous les compilateurs n'ont pas cette option)
+#
+depend-${CLIENT}:
+	${CXX} ${CXXFLAGS} -MM ${CLIENT_SOURCES} > depend-${CLIENT}
+
+depend-${SERVER}:
+	${CXX} ${CXXFLAGS} -MM ${SERVER_SOURCES} > depend-${SERVER}
+
+###########################################
+#
+# Regles implicites
+#
+
+.SUFFIXES: .cpp .cxx .c
+
+.cpp.o:
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $@ $<
+
+.cxx.o:
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $@ $<
+
+.c.o:
+	$(CC) -c (CFLAGS) $(INCPATH) -o $@ $<
+
+
+#############################################
+#
+# Inclusion du fichier des dependances
+#
+-include depend-${CLIENT}
+-include depend-${SERVER}
+
+run-all: 
+	@osascript -e 'tell application "Terminal" to do script "cd $(shell pwd) && ./server"' 
+	@sleep 2
+	@osascript -e 'tell application "Terminal" to do script "cd $(shell pwd) && ./client"'

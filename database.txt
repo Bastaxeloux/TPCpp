@@ -1,0 +1,12 @@
+Photo Cesar media/cesar.jpg 43.5 7.2
+Photo Dust2 media/image.jpg 45.5 6.2
+Photo Fire media/fire.jpg 43.5 7.2
+Photo France media/france.jpg 43.5 7.2
+Photo Keyboard media/keyboard.jpg 43.5 7.2
+Photo Leman media/leman.jpg 43.5 7.2
+Photo Lighthouse media/lighthouse.jpg 43.5 7.2
+Photo Mirage media/image2.jpg 43.5 7.2
+Photo Sailing media/sailing.jpg 43.5 7.2
+Photo Ski media/ski.jpg 43.5 7.2
+Photo Storm media/storm.jpg 43.5 7.2
+Video Vitality media/video.mp4 120
