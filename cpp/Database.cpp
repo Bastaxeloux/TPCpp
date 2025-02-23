@@ -1,36 +1,69 @@
+/**
+ * @file Database.cpp
+ * @brief Gestion, médias, groupes, stockage, chargement.
+ */
+
 #include "Database.h"
 #include <fstream>
 
-/**
- * Les 4 méthodes suivantes créent un objet multimédia (Photo, Video, Film) ou un groupe.
+/** 
+ * @brief Création, photo, stockage.
+ * @param name - identifiant
+ * @param path - chemin
+ * @param latitude - coordonnée
+ * @param longitude - coordonnée
+ * @return instance Photo (shared_ptr)
  */
-
 std::shared_ptr<Photo> Database::createPhoto(const std::string& name, const std::string& path, double latitude, double longitude) {
     auto photo = std::make_shared<Photo>(name, path, latitude, longitude);
     multimediaTable[name] = photo;
     return photo;
 }
 
+/** 
+ * @brief Création, vidéo, stockage.
+ * @param name - identifiant
+ * @param path - chemin
+ * @param duration - durée
+ * @return instance Video (shared_ptr)
+ */
 std::shared_ptr<Video> Database::createVideo(const std::string& name, const std::string& path, int duration) {
     auto video = std::make_shared<Video>(name, path, duration);
     multimediaTable[name] = video;
     return video;
 }
 
+/** 
+ * @brief Création, film, stockage, chapitres.
+ * @param name - identifiant
+ * @param path - chemin
+ * @param duration - durée totale
+ * @param chapters - tableau chapitres
+ * @param nbChapters - nombre chapitres
+ * @return instance Film (shared_ptr)
+ */
 std::shared_ptr<Film> Database::createFilm(const std::string& name, const std::string& path, int duration, const int* chapters, int nbChapters) {
     auto film = std::make_shared<Film>(name, path, duration, chapters, nbChapters);
     multimediaTable[name] = film;
     return film;
 }
 
+/** 
+ * @brief Création, groupe, stockage.
+ * @param name - identifiant
+ * @return instance Group (shared_ptr)
+ */
 std::shared_ptr<Group> Database::createGroup(const std::string& name) {
     auto group = std::make_shared<Group>(name);
     groupTable[name] = group;
     return group;
 }
 
-// Ensuite on affiche soit les objets multimédias, soit les groupes.
-
+/** 
+ * @brief Affichage média.
+ * @param name - identifiant
+ * @param stream - flux de sortie
+ */
 void Database::displayMultimedia(const std::string& name, std::ostream& stream) const {
     auto item = multimediaTable.find(name);
     if (item != multimediaTable.end()) {
@@ -40,6 +73,11 @@ void Database::displayMultimedia(const std::string& name, std::ostream& stream) 
     }
 }
 
+/** 
+ * @brief Affichage groupe.
+ * @param name - identifiant
+ * @param stream - flux de sortie
+ */
 void Database::displayGroup(const std::string& name, std::ostream& stream) const {
     auto item = groupTable.find(name);
     if (item != groupTable.end()) {
@@ -49,7 +87,10 @@ void Database::displayGroup(const std::string& name, std::ostream& stream) const
     }
 }
 
-// On veut pouvoir lire nos objets multimédias.
+/** 
+ * @brief Lecture média.
+ * @param name - identifiant
+ */
 void Database::playMultimedia(const std::string& name) const {
     auto item = multimediaTable.find(name);
     if (item != multimediaTable.end()) {
@@ -59,13 +100,10 @@ void Database::playMultimedia(const std::string& name) const {
     }
 }
 
-
-
-
-/**
- * Ci dessous on définit les deux méthodes pour supprimer un objet multimédia ou un groupe proprement.
+/** 
+ * @brief Suppression, média, nettoyage, groupes.
+ * @param name - identifiant
  */
-
 void Database::deleteMultimedia(const std::string& name) {
     auto item = multimediaTable.find(name);
     if (item != multimediaTable.end()) {
@@ -81,6 +119,10 @@ void Database::deleteMultimedia(const std::string& name) {
     }
 }
 
+/** 
+ * @brief Suppression, groupe.
+ * @param name - identifiant
+ */
 void Database::deleteGroup(const std::string& name) {
     auto item = groupTable.find(name);
     if (item != groupTable.end()) {
@@ -91,10 +133,11 @@ void Database::deleteGroup(const std::string& name) {
     }
 }
 
-
-
-
-
+/** 
+ * @brief Récupérer un média.
+ * @param name - identifiant
+ * @return instance média (MPtr)
+ */
 MPtr Database::getMedia(const std::string& name) const {
     auto item = multimediaTable.find(name);
     if (item != multimediaTable.end()) {
@@ -103,6 +146,11 @@ MPtr Database::getMedia(const std::string& name) const {
     return nullptr;
 }
 
+/** 
+ * @brief Récupérer un groupe.
+ * @param name - identifiant
+ * @return instance groupe (GPtr)
+ */
 GPtr Database::getGroup(const std::string& name) const {
     auto item = groupTable.find(name);
     if (item != groupTable.end()) {
@@ -111,8 +159,10 @@ GPtr Database::getGroup(const std::string& name) const {
     return nullptr;
 }
 
-
-
+/** 
+ * @brief Liste, médias, détails.
+ * @param stream - flux de sortie
+ */
 void Database::listAllMedia(std::ostream& stream) const {
     stream << "Liste des médias disponibles : (" << multimediaTable.size() << " objets); ";
     for (const auto& pair : multimediaTable) {
@@ -128,6 +178,10 @@ void Database::listAllMedia(std::ostream& stream) const {
     }
 }
 
+/** 
+ * @brief Liste, groupes.
+ * @param stream - flux de sortie
+ */
 void Database::listAllGroups(std::ostream& stream) const {
     stream << "Liste des groupes disponibles | ";
     for (const auto& pair : groupTable) {
@@ -135,6 +189,11 @@ void Database::listAllGroups(std::ostream& stream) const {
     }
 }
 
+/** 
+ * @brief Recherche partielle, médias.
+ * @param substring - critère recherche
+ * @param stream - flux de sortie
+ */
 void Database::searchPartial(const std::string& substring, std::ostream& stream) const {
     stream << "Résultats de la recherche pour '" << substring << "' : ";
     bool found = false;
@@ -154,7 +213,11 @@ void Database::searchPartial(const std::string& substring, std::ostream& stream)
     if (!found) stream << "Aucun média trouvé.";
 }
 
-
+/** 
+ * @brief Recherche par type, médias.
+ * @param type - critère type (Photo, Video, Film)
+ * @param stream - flux de sortie
+ */
 void Database::searchByType(const std::string& type, std::ostream& stream) const {
     stream << "Résultats pour les médias de type '" << type << "' : ";
     bool found = false;
@@ -175,7 +238,11 @@ void Database::searchByType(const std::string& type, std::ostream& stream) const
     }
 }
 
-
+/** 
+ * @brief Suppression, objet, média ou groupe.
+ * @param name - identifiant
+ * @return succès (bool)
+ */
 bool Database::deleteObject(const std::string& name) {
     // Suppression dans multimediaTable
     auto mediaIt = multimediaTable.find(name);
@@ -199,6 +266,12 @@ bool Database::deleteObject(const std::string& name) {
     return false;
 }
 
+/** 
+ * @brief Ajout, média, groupe.
+ * @param mediaName - média identifiant
+ * @param groupName - groupe identifiant
+ * @return succès (bool)
+ */
 bool Database::addMediaToGroup(const std::string& mediaName, const std::string& groupName) {
     auto mediaIt = multimediaTable.find(mediaName);
     auto groupIt = groupTable.find(groupName);
@@ -210,6 +283,12 @@ bool Database::addMediaToGroup(const std::string& mediaName, const std::string& 
     return false;
 }
 
+/** 
+ * @brief Suppression, média, groupe.
+ * @param mediaName - identifiant média
+ * @param groupName - identifiant groupe
+ * @return succès (bool)
+ */
 bool Database::removeMediaFromGroup(const std::string& mediaName, const std::string& groupName) {
     auto groupIt = groupTable.find(groupName);
     if (groupIt == groupTable.end()) return false;
@@ -224,6 +303,12 @@ bool Database::removeMediaFromGroup(const std::string& mediaName, const std::str
     return false;
 }
 
+/** 
+ * @brief Vérification, présence média, dans groupe.
+ * @param mediaName - identifiant média
+ * @param groupName - identifiant groupe
+ * @return présence (bool)
+ */
 bool Database::isMediaInGroup(const std::string& mediaName, const std::string& groupName) const {
     auto groupIt = groupTable.find(groupName);
     if (groupIt == groupTable.end()) return false; // Groupe non trouvé
@@ -238,6 +323,10 @@ bool Database::isMediaInGroup(const std::string& mediaName, const std::string& g
     return false;
 }
 
+/** 
+ * @brief Sauvegarde, groupes, fichier.
+ * @param filename - chemin fichier
+ */
 void Database::saveGroupsToFile(const std::string& filename) const {
     std::ofstream file(filename);
     if (!file) {
@@ -251,6 +340,10 @@ void Database::saveGroupsToFile(const std::string& filename) const {
     file.close();
 }
 
+/** 
+ * @brief Chargement, groupes, fichier.
+ * @param filename - chemin fichier
+ */
 void Database::loadGroupsFromFile(const std::string& filename) {
     std::ifstream file(filename);
     if (!file) {
@@ -270,6 +363,10 @@ void Database::loadGroupsFromFile(const std::string& filename) {
     file.close();
 }
 
+/** 
+ * @brief Sauvegarde, médias, fichier.
+ * @param filename - chemin fichier
+ */
 void Database::saveToFile(const std::string& filename) const {
     std::ofstream file(filename);
     if (!file) {
@@ -283,6 +380,10 @@ void Database::saveToFile(const std::string& filename) const {
     file.close();
 }
 
+/** 
+ * @brief Chargement, médias, fichier.
+ * @param filename - chemin fichier
+ */
 void Database::loadFromFile(const std::string& filename) {
     std::ifstream file(filename);
     if (!file) {
@@ -350,4 +451,3 @@ void Database::loadFromFile(const std::string& filename) {
     }
     file.close();
 }
-

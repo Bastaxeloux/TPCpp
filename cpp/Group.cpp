@@ -1,6 +1,20 @@
 #include "Group.h"
 #include "Database.h"
 
+
+/**
+ * @brief lecture groupe, vérification, ajout médias
+ *
+ * @param is   input stream, extraction groupe, compte médias
+ * @param db   Database, accès médias, récupération par nom
+ *
+ * @details
+ * - extraction nom groupe, nombre médias
+ * - boucle sur mediaCount :
+ *   - extraction nom média
+ *   - récupération via db, ajout si valide
+ * - gestion erreurs : flux invalide, média absent
+ */
 void Group::read(std::istream& is, const Database& db) {
     std::string groupName;
     int mediaCount;

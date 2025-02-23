@@ -1,38 +1,44 @@
-# Nom du programme
-PROG = Lecteur-multimedia
-LIBLECTEUR = liblecteur.a
+# Compiler settings
+CXX = g++
+CXXFLAGS = -std=c++17 -Wall -g -Iinclude -pthread
 
 # Répertoires
-SRCDIR = src
+SRCDIR = .
 INCLUDEDIR = include
 OBJDIR = obj
+BINDIR = bin
 
-# Fichiers sources et objets
-MAIN_SOURCES = src/main.cpp src/Database.cpp src/Multimedia.cpp src/Film.cpp src/Group.cpp
-MAIN_OBJECTS = $(MAIN_SOURCES:src/%.cpp=obj/%.o)
+# Fichiers source et objets
+SERVER_SOURCES = server.cpp tcpserver.cpp Database.cpp Film.cpp Group.cpp Multimedia.cpp ccsocket.cpp
+CLIENT_SOURCES = client.cpp ccsocket.cpp
 
-# Compilateur et options
-CXX = g++
-CXXFLAGS = -std=c++17 -Wall -g -I$(INCLUDEDIR) -pthread # -pthread pour les sockets
+SERVER_OBJECTS = $(SERVER_SOURCES:%.cpp=$(OBJDIR)/%.o)
+CLIENT_OBJECTS = $(CLIENT_SOURCES:%.cpp=$(OBJDIR)/%.o)
 
-# Règles
-all: $(PROG) $(LIBLECTEUR)
+# Cibles
+all: server client
 
-# Création d'une librairie statique pour la lier au Makefile cliserv
-$(LIBLECTEUR): $(MAIN_OBJECTS)
-	ar rcs $(LIBLECTEUR) $(MAIN_OBJECTS)
+# Compilation du serveur
+server: $(SERVER_OBJECTS)
+	@mkdir -p $(BINDIR)
+	$(CXX) $(CXXFLAGS) $(SERVER_OBJECTS) -o $(BINDIR)/server
 
-# l'executable
-$(PROG): $(MAIN_OBJECTS)
-	$(CXX) $(CXXFLAGS) $(MAIN_OBJECTS) -o $@
+# Compilation du client
+client: $(CLIENT_OBJECTS)
+	@mkdir -p $(BINDIR)
+	$(CXX) $(CXXFLAGS) $(CLIENT_OBJECTS) -o $(BINDIR)/client
 
-$(OBJDIR)/%.o: $(SRCDIR)/%.cpp
+# Compilation des fichiers .cpp en .o
+$(OBJDIR)/%.o: %.cpp
 	@mkdir -p $(OBJDIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-clean:
-	rm -rf $(OBJDIR) $(PROG)
-
+# Exécuter le serveur et le client
 run: all
-	./Lecteur-multimedia
+	@osascript -e 'tell application "Terminal" to do script "cd $(shell pwd) && $(BINDIR)/server"' 
+	@sleep 2
+	@osascript -e 'tell application "Terminal" to do script "cd $(shell pwd) && $(BINDIR)/client"'
 
+# Nettoyage des fichiers compilés
+clean:
+	rm -rf $(OBJDIR) $(BINDIR)

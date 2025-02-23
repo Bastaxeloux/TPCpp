@@ -1,30 +1,55 @@
+/**
+ * @file Video.h
+ * @brief Déclaration de la classe Video.
+ */
+
 #ifndef VIDEO_H
 #define VIDEO_H
 
 #include "Multimedia.h"
 
+/**
+ * @class Video
+ * @brief Sous-classe de Multimedia.
+ */
 class Video : public Multimedia {
 private:
-    int duration;
+    int duration;  ///< durée en secondes
 
 public:
-    // Constructeur
+    /**
+     * @brief Constructeur.
+     * @param name  Nom (clé).
+     * @param path  Chemin (clé).
+     * @param duration Durée (clé).
+     */
     Video(const std::string& name, const std::string& path, int duration)
         : Multimedia(name, path), duration(duration) {}
 
-    // Getter
+    /**
+     * @brief Getter durée.
+     * @return durée.
+     */
     int getDuration() const { return duration; }
 
-    // Setter
+    /**
+     * @brief Setter durée.
+     * @param d  Nouvelle durée.
+     */
     void setDuration(int d) { duration = d; }
 
-    // Affichage des informations
+    /**
+     * @brief Affichage infos.
+     * @param os Flux de sortie.
+     */
     void display(std::ostream& os) const override {
         Multimedia::display(os);
         os << "Durée: " << duration << " secondes" << std::endl;
     }
 
-    // Lecture de la vidéo
+    /**
+     * @brief Lecture.
+     */
     void play() const override {
         std::string path = getPath();
         #ifdef _WIN32
@@ -36,17 +61,29 @@ public:
         #endif
     }
 
+    /**
+     * @brief Sérialisation.
+     * @param os Flux de sortie.
+     */
     void write(std::ostream& os) const override {
         os << "Video ";
         Multimedia::write(os);
         os << duration << "\n";
     }
     
+    /**
+     * @brief Désérialisation.
+     * @param is Flux d'entrée.
+     */
     void read(std::istream& is) override {
         Multimedia::read(is);
         is >> duration;
     }
     
+    /**
+     * @brief Type d'objet.
+     * @return "Video".
+     */
     std::string getType() const override { return "Video"; }
 };   
 

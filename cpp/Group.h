@@ -7,6 +7,7 @@
 #include <memory>
 #include "Multimedia.h" // car on utilise des objets Multimedia (Photo, Video, Film)
 
+
 using smart_pointer = std::shared_ptr<Multimedia>;
 class Database;
 
